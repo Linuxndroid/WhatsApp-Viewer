@@ -7,7 +7,7 @@ A python script for extracting WhatsApp Chat conversations from the app's SQLite
 # How to Use
 Step.1: The Decrypted Whatsapp database files must be available, Use For This Data Extract [Whatsapp Key Extractor](https://github.com/YuvrajRaghuvanshiS/WhatsApp-Key-Database-Extractor) 
 
-Step.2: Paste msgstore.db or wa.db Same WhatsApp-Viewer Folder
+Step.2: Paste`msgstore.db` or `wa.db` Same WhatsApp-Viewer Folder
 
 Step.3: Run the main script.
 
