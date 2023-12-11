@@ -20,7 +20,7 @@ Goto Browser and Typer Your  - `http://yourip:8080`
 # Watch Video For More Information.
 [![YouTube Video](https://img.youtube.com/vi/x4cDTEwlwuo/0.jpg)](https://www.youtube.com/watch?v=x4cDTEwlwuo)
 
-# Check Out More [Hacking Course](https://shop-linuxndroid.in)
+# Check Out More [Hacking Course](https://linuxndroid.in)
 
 # Disclaimer
 <b>Linuxndroid Provides no warranty with this software and will not be responsible for any direct or indirect damage caused due to the usage of this tool.<br>
