@@ -36,6 +36,10 @@ class Message:
             return f"[Document] {media_caption}"
         elif self.media_wa_type == 16:
             return f"[Live Location] {media_caption}"
+        elif self.media_wa_type == 255:
+            return f"[AUDIO CALL] {media_caption}"
+        elif self.media_wa_type == 256:
+            return f"[VIDEO CALL] {media_caption}"
         else:
             return self.data
 
