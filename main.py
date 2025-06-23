@@ -22,33 +22,38 @@ def query_messages_from_table_messages(con: Connection, key_remote_jid: str, con
         )
     return messages
 
-
 def query_messages_from_table_message(con: Connection, key_remote_jid: str, contacts: Dict[str, Optional[str]]) -> List[Message]:
     cur = con.cursor()
+
     query = """  
-            SELECT
-                m.timestamp,
-                jid.raw_string,
-                m.from_me,
-                CASE
-                    WHEN mr.revoked_key_id > 1 THEN '[Deleted]'
-                    ELSE m.text_data
-                END AS text,
-                m.message_type
-            FROM message AS m
-            LEFT JOIN chat_view AS cv ON m.chat_row_id = cv._id
-            LEFT JOIN jid ON m.sender_jid_row_id = jid._id
-            LEFT JOIN message_revoked AS mr ON m._id = mr.message_row_id
-            WHERE cv.raw_string_jid =:key_remote_jid
-            ORDER BY max(receipt_server_timestamp, received_timestamp)
-            """
+        SELECT
+            m.timestamp,
+            sender_jid.raw_string AS sender_jid_string,
+            m.from_me,
+            CASE
+                WHEN mr.revoked_key_id > 1 THEN '[Deleted]'
+                ELSE m.text_data
+            END AS text,
+            m.message_type
+        FROM message AS m
+        LEFT JOIN chat_view AS cv ON m.chat_row_id = cv._id
+        LEFT JOIN jid AS sender_jid ON m.sender_jid_row_id = sender_jid._id
+        LEFT JOIN jid AS chat_jid ON cv.jid_row_id = chat_jid._id
+        LEFT JOIN message_revoked AS mr ON m._id = mr.message_row_id
+        WHERE chat_jid.raw_string = :key_remote_jid
+        ORDER BY
+            CASE
+                WHEN m.receipt_server_timestamp > m.received_timestamp THEN m.receipt_server_timestamp
+                ELSE m.received_timestamp
+            END
+    """
+
     messages = []
     for timestamp, remote_jid, from_me, data, message_type in cur.execute(query, {"key_remote_jid": key_remote_jid}):
         messages.append(
             Message(timestamp, remote_jid, from_me, data, data, message_type, contacts.get(remote_jid, None))
         )
     return messages
-
 
 def query_all_chats(db_path: str, contacts: Dict[str, Optional[str]]) -> List[Chat]:
     chats = []
@@ -60,7 +65,15 @@ def query_all_chats(db_path: str, contacts: Dict[str, Optional[str]]) -> List[Ch
     table_messages_exists = cur.fetchone() is not None
     print("[+] Using table 'messages'") if table_messages_exists else print("[+] Using table 'message'")
 
-    query = "SELECT raw_string_jid as key_remote_jid, subject, sort_timestamp FROM chat_view WHERE sort_timestamp IS NOT NULL ORDER BY sort_timestamp DESC"
+    # Updated query with JOIN to fetch raw_string from jid table
+    query = """
+        SELECT j.raw_string AS key_remote_jid, c.subject, c.sort_timestamp
+        FROM chat_view c
+        JOIN jid j ON c.jid_row_id = j._id
+        WHERE c.sort_timestamp IS NOT NULL
+        ORDER BY c.sort_timestamp DESC
+    """
+
     for key_remote_jid, subject, sort_timestamp in cur.execute(query):
         if table_messages_exists:
             messages = query_messages_from_table_messages(con, key_remote_jid, contacts)
@@ -70,9 +83,9 @@ def query_all_chats(db_path: str, contacts: Dict[str, Optional[str]]) -> List[Ch
         chats.append(
             Chat(key_remote_jid, subject, sort_timestamp, contacts.get(key_remote_jid, None), messages)
         )
+
     con.close()
     return chats
-
 
 def query_contacts(db_path: str) -> Dict[str, Optional[str]]:
     contacts = {}
@@ -85,7 +98,6 @@ def query_contacts(db_path: str) -> Dict[str, Optional[str]]:
             contacts[jid] = wa_name
     con.close()
     return contacts
-
 
 def main():
     print("### WhatsApp Database Exporter ###")
