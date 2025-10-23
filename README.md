@@ -22,7 +22,7 @@ A Python GUI application for extracting WhatsApp chat conversations from the app
 <h2>How to Use (Recommended for Users)</h2>
 <p>You can download the pre-compiled application from the <strong>Releases</strong> page.</p>
 <ol>
-<li>Go to the <a href="https://github.com/YuvrajRaghuvanshiS/WhatsApp-Key-Database-Extractor/releases"><strong>Releases</strong></a> page of this repository. </li>
+<li>Go to the <a href="https://github.com/Linuxndroid/WhatsApp-Viewer/releases/download/v.1.0/Linuxndroid-WhatsApp-View.exe"><strong>Releases</strong></a> page of this repository. </li>
 <li>Download the latest <code>Linuxndroid-WhatsApp-View.exe</code> file.</li>
 <li>Run the <code>.exe</code> file. (No installation is needed).</li>
 <li>You will first need your <strong>decrypted database files</strong>. You can get them using <a href="https://github.com/YuvrajRaghuvanshiS/WhatsApp-Key-Database-Extractor">WhatsApp-Key-Database-Extractor</a>.</li>
