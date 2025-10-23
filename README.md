@@ -7,7 +7,7 @@ A Python GUI application for extracting WhatsApp chat conversations from the app
 </p>
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x600.png?text=Add+Screenshot+of+GUI+Here" alt="Screenshot of App" width="700">
+  <img src="https://github.com/Linuxndroid/WhatsApp-Viewer/blob/main/resources/1.png" alt="Screenshot of App" width="700">
 </p>
 
 <h2>Features</h2>
